@@ -59,6 +59,7 @@ function mqttDatasource(settings, updateCallback) {
         }
 
         var clientId = makeClientId();
+        console.log("MQTT: connecting to " + currentSettings.server + ":" + currentSettings.port + " as " + clientId);
         client = new Paho.MQTT.Client(currentSettings.server, Number(currentSettings.port), clientId);
 
         client.onConnectionLost = function (responseObject) {
@@ -70,6 +71,7 @@ function mqttDatasource(settings, updateCallback) {
         };
 
         client.onMessageArrived = function (message) {
+            console.log("MQTT message arrived on " + message.destinationName + ": " + message.payloadString);
             var payload = message.payloadString;
             var data;
             try {
@@ -88,7 +90,15 @@ function mqttDatasource(settings, updateCallback) {
             cleanSession: true,
             onSuccess: function () {
                 console.log("MQTT connected, subscribing to " + currentSettings.topic);
-                client.subscribe(currentSettings.topic, { qos: 0 });
+                client.subscribe(currentSettings.topic, {
+                    qos: 0,
+                    onSuccess: function () {
+                        console.log("MQTT subscribe SUCCESS for " + currentSettings.topic);
+                    },
+                    onFailure: function (e) {
+                        console.log("MQTT subscribe FAILED: " + (e && e.errorMessage));
+                    }
+                });
             },
             onFailure: function (e) {
                 console.log("MQTT connect failed: " + e.errorMessage + " -- retrying in 3s");

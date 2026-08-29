@@ -1,0 +1,41 @@
+{
+	"version": 1,
+	"allow_edit": true,
+	"plugins": [],
+	"panes": [
+		{
+			"width": 1,
+			"row": {
+				"3": 1
+			},
+			"col": {
+				"3": 1
+			},
+			"col_width": 1,
+			"widgets": [
+				{
+					"type": "text_widget",
+					"settings": {
+						"title": "Temperature",
+						"size": "regular",
+						"value": "datasources[\"aa\"][\"temp\"]",
+						"animate": true
+					}
+				}
+			]
+		}
+	],
+	"datasources": [
+		{
+			"name": "aa",
+			"type": "paho_mqtt",
+			"settings": {
+				"server": "test.mosquitto.org",
+				"port": 8081,
+				"topic": "kkbb/all",
+				"use_ssl": true
+			}
+		}
+	],
+	"columns": 3
+}
